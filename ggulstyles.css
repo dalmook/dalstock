@@ -7,43 +7,50 @@ body {
 }
 
 .container {
-    max-width: 800px; /* 넓이를 늘려 그래프가 더 잘 보이도록 */
+    max-width: 1200px; /* 최대 너비를 늘려 대형 화면에서도 잘 보이도록 */
     margin: auto;
     background-color: #ffffff;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 30px; /* 내부 요소 간격 */
 }
 
 h1 {
     text-align: center;
     color: #333333;
+    font-size: 2em;
 }
 
 form {
     display: flex;
     flex-direction: column;
+    gap: 15px; /* 폼 요소 간격 */
 }
 
 label {
-    margin-top: 10px;
     margin-bottom: 5px;
     color: #555555;
+    font-weight: bold;
 }
 
 input, select, button {
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #cccccc;
     border-radius: 5px;
     font-size: 16px;
+    width: 100%;
+    box-sizing: border-box; /* 패딩과 보더를 포함한 전체 너비 */
 }
 
 button {
-    margin-top: 20px;
     background-color: #4CAF50;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-size: 18px;
 }
 
 button:hover {
@@ -51,11 +58,23 @@ button:hover {
 }
 
 #result {
-    margin-top: 30px;
     padding: 20px;
     background-color: #e7f3fe;
     border-left: 6px solid #2196F3;
     display: none;
+}
+
+#investment-details {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#investment-details img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
 }
 
 #animation {
@@ -74,12 +93,12 @@ button:hover {
 
 #total-chart-container, #price-variation-chart-container {
     width: 100%;
-    max-width: 800px;
+    max-width: 100%;
     margin: auto;
 }
 
 canvas {
-    /* 필요에 따라 캔버스 높이를 조정 */
+    width: 100% !important;
     height: 400px !important;
 }
 
@@ -116,25 +135,69 @@ canvas {
 }
 
 /* 반응형 디자인 */
-@media (max-width: 768px) {
+
+/* 태블릿 (가로: 768px 이상) */
+@media (min-width: 768px) {
     .container {
-        padding: 20px;
+        padding: 40px;
     }
 
-    input, select, button {
-        font-size: 14px;
-        padding: 8px;
+    h1 {
+        font-size: 2.5em;
     }
 
-    #chart-container, #total-chart-container, #price-variation-chart-container {
-        max-width: 100%;
+    form {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 20px;
     }
 
-    img {
-        width: 80px; /* 애니메이션 이미지 크기 조정 */
+    form label, form input, form select, form button {
+        flex: 1 1 45%; /* 두 개의 열로 배치 */
+    }
+
+    form button {
+        flex: 1 1 100%; /* 버튼은 전체 너비 */
+    }
+
+    #investment-details {
+        flex-direction: row;
+    }
+
+    canvas {
+        height: 500px !important;
     }
 }
 
+/* 모바일 (가로: 480px 이상) */
+@media (max-width: 767px) and (min-width: 481px) {
+    .container {
+        padding: 25px;
+    }
+
+    h1 {
+        font-size: 2.2em;
+    }
+
+    form {
+        gap: 12px;
+    }
+
+    form label, form input, form select, form button {
+        flex: 1 1 100%; /* 단일 열로 배치 */
+    }
+
+    #investment-details {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    canvas {
+        height: 450px !important;
+    }
+}
+
+/* 초소형 모바일 (가로: 480px 이하) */
 @media (max-width: 480px) {
     body {
         padding: 10px;
@@ -145,23 +208,51 @@ canvas {
     }
 
     h1 {
-        font-size: 24px;
+        font-size: 1.8em;
     }
 
-    input, select, button {
-        font-size: 12px;
-        padding: 6px;
+    form {
+        gap: 10px;
     }
 
-    button {
-        margin-top: 15px;
+    form label, form input, form select, form button {
+        font-size: 14px;
+        padding: 8px;
     }
 
-    img {
-        width: 60px; /* 애니메이션 이미지 크기 조정 */
+    form button {
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    #animation img {
+        width: 80px;
     }
 
     canvas {
-        height: 300px !important; /* 모바일에서는 캔버스 높이 줄이기 */
+        height: 300px !important;
+    }
+}
+
+/* 가로 방향 최적화 */
+@media (orientation: landscape) {
+    .container {
+        padding: 30px;
+    }
+
+    canvas {
+        height: 400px !important;
+    }
+
+    @media (max-width: 767px) {
+        canvas {
+            height: 350px !important;
+        }
+    }
+
+    @media (max-width: 480px) {
+        canvas {
+            height: 250px !important;
+        }
     }
 }
