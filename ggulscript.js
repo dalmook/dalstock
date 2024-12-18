@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resultDiv.style.display = 'block';
             resultDiv.innerHTML = `
                 <h2>투자 결과</h2>
-                <p>${year}년에 ${formatNumber(amount)}를 투자하셨다면, ${currentPrice === investmentData['2024'] ? '2024년' : `${Math.max(...Object.keys(investmentData).map(y => parseInt(y)))}년`} 현재 약 <strong>${formatNumber(currentValue)}</strong>이 되었습니다.</p>
+                <p>${year}년에 ${formatNumber(amount)}를 투자하셨다면, ${currentPrice === investmentData['2024'] ? '2024년' : `${Math.max(...Object.keys(investmentData).map(y => parseInt(y)))}년`} 현재 약 <strong>${formatNumber(currentValue)}</strong>원이 되었습니다.</p>
                 <p>변동률: <strong>${growth.toFixed(2)}%</strong></p>
             `;
 
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: `${subInvestment.label} 가격 변동 (원)`,
+                        label: `${subInvestment.label} 가격 변동 (원,$)`,
                         data: priceVariationValues,
                         borderColor: 'rgba(255, 99, 132, 1)',
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             beginAtZero: false,
                             title: {
                                 display: true,
-                                text: '가격 변동 (원)'
+                                text: '가격 변동 (원,$)'
                             },
                             ticks: {
                                 callback: function(value) {
