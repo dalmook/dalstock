@@ -66,15 +66,21 @@ button:hover {
     justify-content: center;
     gap: 20px; /* 이미지 간격 */
 }
+
 #animation img {
     width: 100px;
     height: auto;
 }
 
-#chart-container {
+#total-chart-container, #price-variation-chart-container {
     width: 100%;
     max-width: 800px;
     margin: auto;
+}
+
+canvas {
+    /* 필요에 따라 캔버스 높이를 조정 */
+    height: 400px !important;
 }
 
 /* 애니메이션 스타일 */
@@ -120,7 +126,7 @@ button:hover {
         padding: 8px;
     }
 
-    #chart-container {
+    #chart-container, #total-chart-container, #price-variation-chart-container {
         max-width: 100%;
     }
 
@@ -153,5 +159,9 @@ button:hover {
 
     img {
         width: 60px; /* 애니메이션 이미지 크기 조정 */
+    }
+
+    canvas {
+        height: 300px !important; /* 모바일에서는 캔버스 높이 줄이기 */
     }
 }
