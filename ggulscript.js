@@ -35,6 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 세부 종목 <select>를 초기화하는 함수
     function initializeSubInvestmentTypes(selectedType) {
         const subInvestmentTypeSelect = document.getElementById('sub-investment-type');
+
+        // 기존 Select2 인스턴스 제거
+        if ($(subInvestmentTypeSelect).hasClass("select2-hidden-accessible")) {
+            $(subInvestmentTypeSelect).select2('destroy');
+        }
+
         subInvestmentTypeSelect.innerHTML = ''; // 기존 옵션 제거
 
         if (!selectedType) {
@@ -77,7 +83,8 @@ document.addEventListener('DOMContentLoaded', () => {
         $(subInvestmentTypeSelect).select2({
             placeholder: '선택하세요',
             allowClear: true,
-            width: '100%' // 드롭다운 너비를 100%로 설정
+            width: '100%', // 드롭다운 너비를 100%로 설정
+            dropdownAutoWidth: false // 드롭다운 자동 너비 조정 비활성화
         });
     }
 
@@ -164,7 +171,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const investmentData = subInvestment.data;
             const initialPrice = investmentData[year];
-            const currentPrice = investmentData['2024'];
+            let currentPrice = investmentData['2024'];
+
+            // 2024년 데이터가 없을 경우, 가장 최신 연도 데이터 사용
+            if (currentPrice === undefined) {
+                const availableYears = Object.keys(investmentData)
+                    .map(year => parseInt(year))
+                    .filter(year => !isNaN(year))
+                    .sort((a, b) => a - b);
+                if (availableYears.length > 0) {
+                    const latestYear = availableYears[availableYears.length - 1];
+                    currentPrice = investmentData[latestYear];
+                } else {
+                    alert('사용 가능한 투자 데이터가 없습니다.');
+                    return;
+                }
+            }
 
             if (!initialPrice) {
                 alert(`${year}년도의 데이터가 없습니다.`);
@@ -178,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resultDiv.style.display = 'block';
             resultDiv.innerHTML = `
                 <h2>투자 결과</h2>
-                <p>${year}년에 ${formatNumber(amount)}를 투자하셨다면, 2024년 현재 약 <strong>${formatNumber(currentValue)}</strong>이 되었습니다.</p>
+                <p>${year}년에 ${formatNumber(amount)}를 투자하셨다면, ${currentPrice ? (currentPrice === investmentData['2024'] ? '2024년' : `${Math.max(...Object.keys(investmentData).map(y => parseInt(y)))}년`) : '해당 연도'} 현재 약 <strong>${formatNumber(currentValue)}</strong>이 되었습니다.</p>
                 <p>변동률: <strong>${growth.toFixed(2)}%</strong></p>
             `;
 
@@ -202,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 가격 상승 시 애니메이션 추가
                 for (let i = 0; i < 5; i++) { // 원하는 반복 횟수로 조정
                     const img = document.createElement('img');
-                    img.src = './images/happy.jpeg'; // 상승 시 사용할 이미지
+                    img.src = 'happy.jpeg'; // 상승 시 사용할 이미지
                     img.alt = '상승';
                     img.classList.add('bounce');
                     img.style.width = '100px';
@@ -212,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 가격 하락 시 애니메이션 추가
                 for (let i = 0; i < 5; i++) { // 원하는 반복 횟수로 조정
                     const img = document.createElement('img');
-                    img.src = './images/sad.jpg'; // 하락 시 사용할 이미지
+                    img.src = 'sad.jpg'; // 하락 시 사용할 이미지
                     img.alt = '하락';
                     img.classList.add('shake');
                     img.style.width = '100px';
@@ -227,7 +249,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const labels = [];
             const investmentValues = [];
             const priceVariationValues = []; // 세부 항목별 가격 변동 데이터
-            for (let y = year; y <= 2024; y++) {
+            let endYear = '2024';
+            if (currentPrice === investmentData['2024']) {
+                endYear = '2024';
+            } else {
+                // 2024년이 없을 경우, 가장 최신 연도 사용
+                const availableYears = Object.keys(investmentData)
+                    .map(year => parseInt(year))
+                    .filter(year => !isNaN(year))
+                    .sort((a, b) => a - b);
+                endYear = availableYears.length > 0 ? availableYears[availableYears.length - 1].toString() : year.toString();
+            }
+
+            for (let y = year; y <= parseInt(endYear); y++) {
                 const price = investmentData[y];
                 if (price) {
                     labels.push(`${y}`);
