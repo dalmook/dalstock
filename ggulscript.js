@@ -2,9 +2,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('investment-form');
     const resultDiv = document.getElementById('result');
     const animationDiv = document.getElementById('animation');
-    const chartContainer = document.getElementById('chart-container');
-    const ctx = document.getElementById('investment-chart').getContext('2d');
-    let investmentChart; // Chart 인스턴스를 저장할 변수
+    const totalChartContainer = document.getElementById('total-chart-container');
+    const priceVariationChartContainer = document.getElementById('price-variation-chart-container');
+    const totalCtx = document.getElementById('total-investment-chart').getContext('2d');
+    const priceVariationCtx = document.getElementById('price-variation-chart').getContext('2d');
+    let totalInvestmentChart; // 총 투자 금액 그래프 인스턴스
+    let priceVariationChart; // 세부 항목별 가격 변동 그래프 인스턴스
     let investmentsData = []; // JSON에서 불러온 투자 항목 데이터
 
     // 투자 항목 <select>를 초기화하는 함수
@@ -139,9 +142,23 @@ document.addEventListener('DOMContentLoaded', () => {
             resultDiv.style.display = 'block';
             resultDiv.innerHTML = `
                 <h2>투자 결과</h2>
-                <p>${year}년에 ${formatNumber(amount)}원을 투자하셨다면, 2024년 현재 약 <strong>${formatNumber(currentValue)}원</strong>이 되었습니다.</p>
+                <p>${year}년에 ${formatNumber(amount)}를 투자하셨다면, 2024년 현재 약 <strong>${formatNumber(currentValue)}</strong>이 되었습니다.</p>
                 <p>변동률: <strong>${growth.toFixed(2)}%</strong></p>
             `;
+
+            // 투자 항목 상세 정보 표시 (디버깅용)
+            const investmentDetailsDiv = document.getElementById('investment-details');
+            console.log('investmentDetailsDiv:', investmentDetailsDiv); // 디버깅 로그
+
+            if (investmentDetailsDiv) {
+                investmentDetailsDiv.innerHTML = `
+                    <h3>${subInvestment.label}</h3>
+                    <img src="${subInvestment.logo || 'default-logo.png'}" alt="${subInvestment.label}" style="width: 50px; height: 50px;">
+                    <p>${subInvestment.description || '세부 항목에 대한 설명이 없습니다.'}</p>
+                `;
+            } else {
+                console.error('investment-details 요소를 찾을 수 없습니다.');
+            }
 
             // 애니메이션 제어
             animationDiv.innerHTML = '';
@@ -173,33 +190,38 @@ document.addEventListener('DOMContentLoaded', () => {
             // 그래프 데이터 준비
             const labels = [];
             const investmentValues = [];
+            const priceVariationValues = []; // 세부 항목별 가격 변동 데이터
             for (let y = year; y <= 2024; y++) {
                 const price = investmentData[y];
                 if (price) {
                     labels.push(`${y}`);
-                    const value = ((price / initialPrice) * amount).toFixed(0); // 소수점 제거
+                    const value = Math.floor((price / initialPrice) * amount); // 총 투자 금액 변화
                     investmentValues.push(value);
+
+                    priceVariationValues.push(price); // 세부 항목별 가격 변동
                 }
             }
 
-            // 그래프 표시
-            chartContainer.style.display = 'block';
-            if (investmentChart) {
-                investmentChart.destroy(); // 기존 차트가 있으면 제거
+            // 총 투자 금액 그래프 표시
+            totalChartContainer.style.display = 'block';
+            if (totalInvestmentChart) {
+                totalInvestmentChart.destroy(); // 기존 그래프가 있으면 제거
             }
 
-            investmentChart = new Chart(ctx, {
+            totalInvestmentChart = new Chart(totalCtx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: `${subInvestment.label} 투자 가치 (원)`,
+                        label: `${subInvestment.label} 총 투자 금액 (원)`,
                         data: investmentValues,
                         borderColor: 'rgba(75, 192, 192, 1)',
                         backgroundColor: 'rgba(75, 192, 192, 0.2)',
                         borderWidth: 2,
                         fill: true,
-                        tension: 0.1
+                        tension: 0.1,
+                        pointRadius: 3,
+                        pointBackgroundColor: 'rgba(75, 192, 192, 1)'
                     }]
                 },
                 options: {
@@ -207,10 +229,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     scales: {
                         y: {
                             beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: '총 투자 금액 (원)'
+                            },
                             ticks: {
                                 callback: function(value) {
                                     return formatCurrency(value);
                                 }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '연도'
                             }
                         }
                     },
@@ -221,6 +253,76 @@ document.addEventListener('DOMContentLoaded', () => {
                                     return ` ${formatCurrency(context.parsed.y)}`;
                                 }
                             }
+                        },
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: '총 투자 금액 변화'
+                        }
+                    }
+                }
+            });
+
+            // 세부 항목별 가격 변동 그래프 표시
+            priceVariationChartContainer.style.display = 'block';
+            if (priceVariationChart) {
+                priceVariationChart.destroy(); // 기존 그래프가 있으면 제거
+            }
+
+            priceVariationChart = new Chart(priceVariationCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: `${subInvestment.label} 가격 변동`,
+                        data: priceVariationValues,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.1,
+                        pointRadius: 3,
+                        pointBackgroundColor: 'rgba(255, 99, 132, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            title: {
+                                display: true,
+                                text: '가격 변동'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '연도'
+                            }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${formatCurrency(context.parsed.y)}`;
+                                }
+                            }
+                        },
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: '세부 항목별 가격 변동'
                         }
                     }
                 }
@@ -233,6 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 숫자를 단위에 따라 포맷팅하는 함수
+    // 숫자를 단위에 따라 포맷팅하는 함수
     function formatCurrency(num) {
         if (num >= 1000000000000) { // 1조 이상
             return `${Math.floor(num / 1000000000000)}조 원`;
@@ -241,10 +344,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (num >= 10000) { // 1만 이상
             return `${Math.floor(num / 10000)}만 원`;
         } else {
-            return `${num} 원`;
+            return `${num}`;
         }
     }
     function formatNumber(num) {
         return Math.round(Number(num)).toLocaleString('ko-KR');
-    }            
+    } 
 });
