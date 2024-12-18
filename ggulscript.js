@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 가격 상승 시 애니메이션 추가
                 for (let i = 0; i < 5; i++) { // 원하는 반복 횟수로 조정
                     const img = document.createElement('img');
-                    img.src = 'happy.jpeg'; // 상승 시 사용할 이미지
+                    img.src = './images/happy.jpeg'; // 상승 시 사용할 이미지
                     img.alt = '상승';
                     img.classList.add('bounce');
                     img.style.width = '100px';
@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 가격 하락 시 애니메이션 추가
                 for (let i = 0; i < 5; i++) { // 원하는 반복 횟수로 조정
                     const img = document.createElement('img');
-                    img.src = 'sad.jpg'; // 하락 시 사용할 이미지
+                    img.src = './images/sad.jpg'; // 하락 시 사용할 이미지
                     img.alt = '하락';
                     img.classList.add('shake');
                     img.style.width = '100px';
