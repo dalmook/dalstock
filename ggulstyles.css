@@ -102,6 +102,20 @@ canvas {
     height: 400px !important;
 }
 
+/* Select2 스타일 조정 */
+.select2-container .select2-selection--single {
+    height: 40px;
+    padding: 10px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 20px;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 38px;
+}
+
 /* 애니메이션 스타일 */
 @keyframes bounce {
     0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
