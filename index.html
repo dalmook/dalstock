@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>껄무새 (그 때 살껄껄껄)</title>
+    <link rel="stylesheet" href="ggulstyles.css">
+    <!-- Chart.js CDN 추가 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>껄무새 (내가 사라고 했제?)</h1>
+        <form id="investment-form">
+            <label for="main-investment-type">투자 항목:</label>
+            <select id="main-investment-type" required>
+                <option value="" disabled selected>선택하세요</option>
+                <!-- 메인 투자 항목이 JavaScript에 의해 동적으로 추가됩니다 -->
+            </select>
+
+            <label for="sub-investment-type">세부 종목:</label>
+            <select id="sub-investment-type" required>
+                <option value="" disabled selected>먼저 투자 항목을 선택하세요</option>
+                <!-- 세부 종목이 JavaScript에 의해 동적으로 추가됩니다 -->
+            </select>
+
+            <label for="investment-amount">투자 금액 (원):</label>
+            <input type="number" id="investment-amount" min="1" value="100000000" required>
+
+            <label for="investment-year">투자 년도:</label>
+            <input type="number" id="investment-year" min="2010" max="2024" value="2010" required>
+
+            <button type="submit">투자 결과 보기</button>
+        </form>
+
+        <div id="result">
+            <!-- 결과가 여기에 표시됩니다 -->
+            <div id="investment-details"></div>
+        </div>        
+
+        <div id="animation">
+            <!-- 애니메이션이 여기에 표시됩니다 -->
+        </div>
+
+        <!-- 그래프를 표시할 캔버스 추가 -->
+        <div id="chart-container" style="margin-top: 30px; display: none;">
+            <canvas id="investment-chart"></canvas>
+        </div>
+    </div>
+
+    <script src="ggulscript.js"></script>
+</body>
+</html>
