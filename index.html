@@ -41,9 +41,16 @@
             <!-- 애니메이션이 여기에 표시됩니다 -->
         </div>
 
-        <!-- 그래프를 표시할 캔버스 추가 -->
-        <div id="chart-container" style="margin-top: 30px; display: none;">
-            <canvas id="investment-chart"></canvas>
+        <!-- 총 금액 그래프를 표시할 캔버스 추가 -->
+        <div id="total-chart-container" style="margin-top: 30px; display: none;">
+            <h3>총 투자 금액 변화</h3>
+            <canvas id="total-investment-chart"></canvas>
+        </div>
+
+        <!-- 세부 항목별 가격 변동 그래프를 표시할 캔버스 추가 -->
+        <div id="price-variation-chart-container" style="margin-top: 30px; display: none;">
+            <h3>세부 항목별 가격 변동</h3>
+            <canvas id="price-variation-chart"></canvas>
         </div>
     </div>
 
