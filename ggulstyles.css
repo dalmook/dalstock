@@ -30,8 +30,13 @@ form {
     gap: 15px; /* 폼 요소 간격 */
 }
 
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
 label {
-    margin-bottom: 5px;
     color: #555555;
     font-weight: bold;
 }
@@ -103,6 +108,10 @@ canvas {
 }
 
 /* Select2 스타일 조정 */
+.select2-container {
+    width: 100% !important; /* Select2 컨테이너 너비를 100%로 설정 */
+}
+
 .select2-container .select2-selection--single {
     height: 40px;
     padding: 10px;
@@ -166,7 +175,7 @@ canvas {
         gap: 20px;
     }
 
-    form label, form input, form select, form button {
+    .form-group {
         flex: 1 1 45%; /* 두 개의 열로 배치 */
     }
 
@@ -197,7 +206,7 @@ canvas {
         gap: 12px;
     }
 
-    form label, form input, form select, form button {
+    .form-group {
         flex: 1 1 100%; /* 단일 열로 배치 */
     }
 
@@ -227,6 +236,10 @@ canvas {
 
     form {
         gap: 10px;
+    }
+
+    .form-group {
+        gap: 5px;
     }
 
     form label, form input, form select, form button {
@@ -269,4 +282,9 @@ canvas {
             height: 250px !important;
         }
     }
+}
+
+/* Select2 드롭다운 최대 너비 설정 */
+.select2-dropdown {
+    max-width: 100% !important;
 }
