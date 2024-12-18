@@ -26,12 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 mainInvestmentTypeSelect.appendChild(option);
             });
 
-            // 메인 투자 항목에 Select2 초기화
-            $(mainInvestmentTypeSelect).select2({
-                placeholder: '선택하세요',
-                allowClear: true,
-                width: '100%' // 드롭다운 너비를 100%로 설정
-            });
+            // Select2 초기화 제거 (표준 드롭다운 사용)
 
         } catch (error) {
             console.error('투자 항목을 불러오는 중 오류 발생:', error);
@@ -42,11 +37,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 세부 종목 <select>를 초기화하는 함수
     function initializeSubInvestmentTypes(selectedType) {
         const subInvestmentTypeSelect = document.getElementById('sub-investment-type');
-
-        // 기존 Select2 인스턴스가 있다면 제거 (현재는 Select2 사용 안 함)
-        if ($(subInvestmentTypeSelect).hasClass("select2-hidden-accessible")) {
-            $(subInvestmentTypeSelect).select2('destroy');
-        }
 
         subInvestmentTypeSelect.innerHTML = ''; // 기존 옵션 제거
 
