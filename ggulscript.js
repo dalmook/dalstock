@@ -26,6 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 mainInvestmentTypeSelect.appendChild(option);
             });
 
+            // 메인 투자 항목에 Select2 초기화
+            $(mainInvestmentTypeSelect).select2({
+                placeholder: '선택하세요',
+                allowClear: true,
+                width: '100%' // 드롭다운 너비를 100%로 설정
+            });
+
         } catch (error) {
             console.error('투자 항목을 불러오는 중 오류 발생:', error);
             alert('투자 항목을 불러오는 데 문제가 발생했습니다.');
@@ -36,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function initializeSubInvestmentTypes(selectedType) {
         const subInvestmentTypeSelect = document.getElementById('sub-investment-type');
 
-        // 기존 Select2 인스턴스 제거
+        // 기존 Select2 인스턴스가 있다면 제거 (현재는 Select2 사용 안 함)
         if ($(subInvestmentTypeSelect).hasClass("select2-hidden-accessible")) {
             $(subInvestmentTypeSelect).select2('destroy');
         }
@@ -79,13 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
             subInvestmentTypeSelect.appendChild(noOption);
         }
 
-        // Select2 초기화 또는 재초기화
-        $(subInvestmentTypeSelect).select2({
-            placeholder: '선택하세요',
-            allowClear: true,
-            width: '100%', // 드롭다운 너비를 100%로 설정
-            dropdownAutoWidth: false // 드롭다운 자동 너비 조정 비활성화
-        });
+        // Select2 초기화 제거 (표준 드롭다운 사용)
     }
 
     initializeInvestmentTypes();
@@ -104,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const subInvestmentTypeSelect = document.getElementById('sub-investment-type');
         const investmentYearInput = document.getElementById('investment-year');
 
-        // Select2의 change 이벤트를 사용
-        $(subInvestmentTypeSelect).on('change', () => {
+        // 서브 투자 종목 선택 시 이벤트 리스너 추가
+        subInvestmentTypeSelect.addEventListener('change', () => {
             const mainType = mainInvestmentTypeSelect.value;
             const subType = subInvestmentTypeSelect.value;
 
@@ -200,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resultDiv.style.display = 'block';
             resultDiv.innerHTML = `
                 <h2>투자 결과</h2>
-                <p>${year}년에 ${formatNumber(amount)}를 투자하셨다면, ${currentPrice ? (currentPrice === investmentData['2024'] ? '2024년' : `${Math.max(...Object.keys(investmentData).map(y => parseInt(y)))}년`) : '해당 연도'} 현재 약 <strong>${formatNumber(currentValue)}</strong>이 되었습니다.</p>
+                <p>${year}년에 ${formatNumber(amount)}를 투자하셨다면, ${currentPrice === investmentData['2024'] ? '2024년' : `${Math.max(...Object.keys(investmentData).map(y => parseInt(y)))}년`} 현재 약 <strong>${formatNumber(currentValue)}</strong>이 되었습니다.</p>
                 <p>변동률: <strong>${growth.toFixed(2)}%</strong></p>
             `;
 
