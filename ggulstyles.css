@@ -1,7 +1,6 @@
 /* 기본 스타일 */
-@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300&family=Gamja+Flower&family=Gowun+Dodum&display=swap');
 body {
-    font-family: "Gowun Dodum", sans-serif;
+    font-family: Arial, sans-serif;
     background-color: #f0f8ff;
     margin: 0;
     padding: 20px;
@@ -108,7 +107,7 @@ canvas {
     height: 400px !important;
 }
 
-/* Select2 스타일 조정 */
+/* Select2 스타일 조정 (메인 투자 항목에만 적용) */
 .select2-container {
     width: 100% !important; /* Select2 컨테이너 너비를 100%로 설정 */
 }
@@ -285,7 +284,8 @@ canvas {
     }
 }
 
-/* Select2 드롭다운 최대 너비 설정 */
+/* Select2 드롭다운 최대 너비 설정 (메인 투자 항목에만 적용) */
 .select2-dropdown {
     max-width: 100% !important;
+    z-index: 9999; /* 필요시 추가 */
 }
