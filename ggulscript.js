@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 mainInvestmentTypeSelect.appendChild(option);
             });
 
-            // 투자 년도 범위 설정 (최소, 최대값 이미 설정되어 있으므로 추가 작업 불필요)
         } catch (error) {
             console.error('투자 항목을 불러오는 중 오류 발생:', error);
             alert('투자 항목을 불러오는 데 문제가 발생했습니다.');
@@ -82,7 +81,33 @@ document.addEventListener('DOMContentLoaded', () => {
     mainInvestmentTypeSelect.addEventListener('change', (e) => {
         const selectedType = e.target.value;
         initializeSubInvestmentTypes(selectedType);
+        // 서브 투자 종목 선택 시 첫 연도로 자동 설정하는 기능을 초기화
+        setFirstYearOnSubInvestmentChange();
     });
+
+    // 서브 투자 종목 변경 시 첫 연도로 설정하는 함수
+    function setFirstYearOnSubInvestmentChange() {
+        const subInvestmentTypeSelect = document.getElementById('sub-investment-type');
+        const investmentYearInput = document.getElementById('investment-year');
+
+        subInvestmentTypeSelect.addEventListener('change', () => {
+            const mainType = mainInvestmentTypeSelect.value;
+            const subType = subInvestmentTypeSelect.value;
+
+            if (!mainType || !subType) return;
+
+            const mainInvestment = investmentsData.find(inv => inv.type === mainType);
+            if (!mainInvestment) return;
+
+            const subInvestment = mainInvestment.subItems.find(sub => sub.type === subType);
+            if (!subInvestment) return;
+
+            const dataYears = Object.keys(subInvestment.data).map(year => parseInt(year)).sort((a, b) => a - b);
+            if (dataYears.length > 0) {
+                investmentYearInput.value = dataYears[0];
+            }
+        });
+    }
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -105,8 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (isNaN(year) || year < 2010 || year > 2024) {
-            alert('투자 년도는 2010년부터 2024년까지 가능합니다.');
+        if (isNaN(year)) {
+            alert('유효한 투자 년도를 입력하세요.');
             return;
         }
 
@@ -146,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p>변동률: <strong>${growth.toFixed(2)}%</strong></p>
             `;
 
-            // 투자 항목 상세 정보 표시 (디버깅용)
+            // 투자 항목 상세 정보 표시 (옵션)
             const investmentDetailsDiv = document.getElementById('investment-details');
             console.log('investmentDetailsDiv:', investmentDetailsDiv); // 디버깅 로그
 
@@ -166,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 가격 상승 시 애니메이션 추가
                 for (let i = 0; i < 5; i++) { // 원하는 반복 횟수로 조정
                     const img = document.createElement('img');
-                    img.src = 'images/happy.jpeg'; // 상승 시 사용할 이미지
+                    img.src = 'happy.jpeg'; // 상승 시 사용할 이미지
                     img.alt = '상승';
                     img.classList.add('bounce');
                     img.style.width = '100px';
@@ -176,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 가격 하락 시 애니메이션 추가
                 for (let i = 0; i < 5; i++) { // 원하는 반복 횟수로 조정
                     const img = document.createElement('img');
-                    img.src = 'images/sad.jpg'; // 하락 시 사용할 이미지
+                    img.src = 'sad.jpg'; // 하락 시 사용할 이미지
                     img.alt = '하락';
                     img.classList.add('shake');
                     img.style.width = '100px';
@@ -335,7 +360,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 숫자를 단위에 따라 포맷팅하는 함수
-    // 숫자를 단위에 따라 포맷팅하는 함수
     function formatCurrency(num) {
         if (num >= 1000000000000) { // 1조 이상
             return `${Math.floor(num / 1000000000000)}조 원`;
@@ -349,5 +373,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function formatNumber(num) {
         return Math.round(Number(num)).toLocaleString('ko-KR');
-    } 
+    }
 });
