@@ -1,6 +1,8 @@
 /* 기본 스타일 */
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300&family=Gamja+Flower&family=Gowun+Dodum&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Gowun Dodum", sans-serif;
     background-color: #f0f8ff;
     margin: 0;
     padding: 20px;
