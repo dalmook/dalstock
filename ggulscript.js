@@ -72,6 +72,13 @@ document.addEventListener('DOMContentLoaded', () => {
             noOption.selected = true;
             subInvestmentTypeSelect.appendChild(noOption);
         }
+
+        // Select2 초기화 또는 재초기화
+        $(subInvestmentTypeSelect).select2({
+            placeholder: '선택하세요',
+            allowClear: true,
+            width: '100%' // 드롭다운 너비를 100%로 설정
+        });
     }
 
     initializeInvestmentTypes();
@@ -90,7 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const subInvestmentTypeSelect = document.getElementById('sub-investment-type');
         const investmentYearInput = document.getElementById('investment-year');
 
-        subInvestmentTypeSelect.addEventListener('change', () => {
+        // Select2의 change 이벤트를 사용
+        $(subInvestmentTypeSelect).on('change', () => {
             const mainType = mainInvestmentTypeSelect.value;
             const subType = subInvestmentTypeSelect.value;
 
@@ -102,7 +110,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const subInvestment = mainInvestment.subItems.find(sub => sub.type === subType);
             if (!subInvestment) return;
 
-            const dataYears = Object.keys(subInvestment.data).map(year => parseInt(year)).sort((a, b) => a - b);
+            const dataYears = Object.keys(subInvestment.data)
+                .map(year => parseInt(year))
+                .filter(year => !isNaN(year))
+                .sort((a, b) => a - b);
             if (dataYears.length > 0) {
                 investmentYearInput.value = dataYears[0];
             }
@@ -171,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p>변동률: <strong>${growth.toFixed(2)}%</strong></p>
             `;
 
-            // 투자 항목 상세 정보 표시 (옵션)
+            // 투자 항목 상세 정보 표시
             const investmentDetailsDiv = document.getElementById('investment-details');
             console.log('investmentDetailsDiv:', investmentDetailsDiv); // 디버깅 로그
 
@@ -191,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 가격 상승 시 애니메이션 추가
                 for (let i = 0; i < 5; i++) { // 원하는 반복 횟수로 조정
                     const img = document.createElement('img');
-                    img.src = 'happy.jpeg'; // 상승 시 사용할 이미지
+                    img.src = './images/happy.jpeg'; // 상승 시 사용할 이미지
                     img.alt = '상승';
                     img.classList.add('bounce');
                     img.style.width = '100px';
@@ -201,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // 가격 하락 시 애니메이션 추가
                 for (let i = 0; i < 5; i++) { // 원하는 반복 횟수로 조정
                     const img = document.createElement('img');
-                    img.src = 'sad.jpg'; // 하락 시 사용할 이미지
+                    img.src = './images/sad.jpg'; // 하락 시 사용할 이미지
                     img.alt = '하락';
                     img.classList.add('shake');
                     img.style.width = '100px';
@@ -301,7 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: `${subInvestment.label} 가격 변동`,
+                        label: `${subInvestment.label} 가격 변동 (원)`,
                         data: priceVariationValues,
                         borderColor: 'rgba(255, 99, 132, 1)',
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -319,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             beginAtZero: false,
                             title: {
                                 display: true,
-                                text: '가격 변동'
+                                text: '가격 변동 (원)'
                             },
                             ticks: {
                                 callback: function(value) {
