@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: `${subInvestment.label} 가격 변동 (원)`,
+                        label: `${subInvestment.label} 가격 변동 (원,$)`,
                         data: priceVariationValues,
                         borderColor: 'rgba(255, 99, 132, 1)',
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             beginAtZero: false,
                             title: {
                                 display: true,
-                                text: '가격 변동 (원)'
+                                text: '가격 변동 (원,$)'
                             },
                             ticks: {
                                 callback: function(value) {
@@ -422,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (result === '') { // 원 단위
-            result = `${num.toLocaleString('ko-KR')}원`;
+            result = `${num.toLocaleString('ko-KR')}`;
         }
 
         return result;
