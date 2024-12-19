@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const animationDiv = document.getElementById('animation');
     const chartsDiv = document.getElementById('charts');
     const combinedCtx = document.getElementById('combined-chart').getContext('2d');
+    const resetButton = document.getElementById('reset-button'); // 초기화 버튼    
     let combinedChart; // 결합된 그래프 인스턴스
     let investmentsData = []; // JSON에서 불러온 투자 항목 데이터
 
@@ -380,6 +381,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // 초기화 버튼 이벤트 리스너
+    resetButton.addEventListener('click', () => {
+        // 폼 리셋
+        form.reset();
+
+        // 세부 종목 드롭다운을 기본 상태로 초기화
+        const subInvestmentTypeSelect = document.getElementById('sub-investment-type');
+        subInvestmentTypeSelect.innerHTML = '<option value="" disabled selected>먼저 투자 항목을 선택하세요</option>';
+
+        // 결과 영역 숨기기
+        resultDiv.style.display = 'none';
+        resultDiv.innerHTML = '';
+
+        // 투자 항목 상세 정보 숨기기
+        const investmentDetailsDiv = document.getElementById('investment-details');
+        investmentDetailsDiv.innerHTML = '';
+
+        // 애니메이션 영역 초기화
+        animationDiv.innerHTML = '';
+
+        // 그래프 숨기기 및 초기화
+        chartsDiv.style.display = 'none';
+        if (combinedChart) {
+            combinedChart.destroy();
+            combinedChart = null;
+        }
+    });
+    
     // 숫자를 단위에 따라 포맷팅하는 함수
     function formatCurrency(num) {
         const ONE_TRILLION = 1000000000000; // 1조
