@@ -1,81 +1,24 @@
-/* 기본 스타일 */
+/* Custom Styles */
 @import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300&family=Gamja+Flower&family=Gowun+Dodum&display=swap');
-
+/* 기본 스타일 유지 및 추가 */
 body {
+    font-family: Arial, sans-serif;
     font-family: "Gowun Dodum", sans-serif;
-    background-color: #f0f8ff;
     margin: 0;
-    padding: 20px;
-}
-
-.container {
-    max-width: 1200px; /* 최대 너비를 늘려 대형 화면에서도 잘 보이도록 */
-    margin: auto;
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 30px; /* 내부 요소 간격 */
+    padding: 0;
 }
 
 h1 {
-    text-align: center;
     color: #333333;
-    font-size: 2em;
+    font-size: 2rem; /* Bootstrap의 기본 폰트 크기와 조정 */
 }
 
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* 폼 요소 간격 */
+#result h2 {
+    color: #333333;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-label {
-    color: #555555;
-    font-weight: bold;
-}
-
-input, select, button {
-    padding: 12px;
-    border: 1px solid #cccccc;
-    border-radius: 5px;
-    font-size: 16px;
-    width: 100%;
-    box-sizing: border-box; /* 패딩과 보더를 포함한 전체 너비 */
-}
-
-button {
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-size: 18px;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-#result {
-    padding: 20px;
-    background-color: #e7f3fe;
-    border-left: 6px solid #2196F3;
-    display: none;
-}
-
-#investment-details {
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
+#investment-details h3 {
+    color: #333333;
 }
 
 #investment-details img {
@@ -84,44 +27,42 @@ button:hover {
     border-radius: 5px;
 }
 
-#animation {
-    margin-top: 20px;
-    text-align: center;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px; /* 이미지 간격 */
-}
-
 #animation img {
     width: 100px;
-    height: auto;
 }
 
-#total-chart-container, #price-variation-chart-container {
+@media (max-width: 768px) {
+    #animation img {
+        width: 80px;
+    }
+}
+
+/* 그래프 컨테이너 조정 */
+#charts .card-body {
+    position: relative;
+    height: 500px; /* 원하는 세로 높이로 설정 */
     width: 100%;
-    max-width: 100%;
-    margin: auto;
 }
 
-canvas {
-    width: 100% !important;
-    height: 400px !important;
+@media (min-width: 768px) {
+    #charts .card-body {
+        height: 600px; /* 더 큰 화면에서 높이 증가 */
+    }
 }
 
-/* Select2 관련 스타일 제거 */
-/* .select2-container 및 관련 클래스 삭제 */
-
-/* 애니메이션 스타일 */
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-    40% {transform: translateY(-30px);}
-    60% {transform: translateY(-15px);}
-}
-
+/* 애니메이션 클래스 */
 .bounce {
-    display: inline-block;
     animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-30px); }
+    60% { transform: translateY(-15px); }
+}
+
+.shake {
+    animation: shake 0.5s infinite;
 }
 
 @keyframes shake {
@@ -138,135 +79,15 @@ canvas {
     100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
 
-.shake {
-    display: inline-block;
-    animation: shake 0.5s;
-    animation-iteration-count: infinite;
+/* 추가적인 고정 너비 클래스 (필요 시 사용) */
+.fixed-width {
+    width: 100%;
 }
 
-/* 반응형 디자인 */
-
-/* 태블릿 (가로: 768px 이상) */
-@media (min-width: 768px) {
-    .container {
-        padding: 40px;
-    }
-
-    h1 {
-        font-size: 2.5em;
-    }
-
-    form {
-        flex-direction: row;
-        flex-wrap: wrap;
-        gap: 20px;
-    }
-
-    .form-group {
-        flex: 1 1 45%; /* 두 개의 열로 배치 */
-    }
-
-    form button {
-        flex: 1 1 100%; /* 버튼은 전체 너비 */
-    }
-
-    #investment-details {
-        flex-direction: row;
-    }
-
-    canvas {
-        height: 500px !important;
-    }
+.fixed-width-75 {
+    width: 75%;
 }
 
-/* 모바일 (가로: 480px 이상) */
-@media (max-width: 767px) and (min-width: 481px) {
-    .container {
-        padding: 25px;
-    }
-
-    h1 {
-        font-size: 2.2em;
-    }
-
-    form {
-        gap: 12px;
-    }
-
-    .form-group {
-        flex: 1 1 100%; /* 단일 열로 배치 */
-    }
-
-    #investment-details {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    canvas {
-        height: 450px !important;
-    }
-}
-
-/* 초소형 모바일 (가로: 480px 이하) */
-@media (max-width: 480px) {
-    body {
-        padding: 10px;
-    }
-
-    .container {
-        padding: 15px;
-    }
-
-    h1 {
-        font-size: 1.8em;
-    }
-
-    form {
-        gap: 10px;
-    }
-
-    .form-group {
-        gap: 5px;
-    }
-
-    form label, form input, form select, form button {
-        font-size: 14px;
-        padding: 8px;
-    }
-
-    form button {
-        font-size: 16px;
-        padding: 10px;
-    }
-
-    #animation img {
-        width: 80px;
-    }
-
-    canvas {
-        height: 300px !important;
-    }
-}
-
-/* 가로 방향 최적화 */
-@media (orientation: landscape) {
-    .container {
-        padding: 30px;
-    }
-
-    canvas {
-        height: 400px !important;
-    }
-
-    @media (max-width: 767px) {
-        canvas {
-            height: 350px !important;
-        }
-    }
-
-    @media (max-width: 480px) {
-        canvas {
-            height: 250px !important;
-        }
-    }
+.fixed-width-50 {
+    width: 50%;
 }
