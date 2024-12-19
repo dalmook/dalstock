@@ -258,7 +258,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     labels: labels,
                     datasets: [
                         {
-                            label: `${subInvestment.label} 총 금액 (원)`,
+                            label: `총 금액 (원)`,
                             data: investmentValues,
                             type: 'line',
                             yAxisID: 'y',
@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             pointBackgroundColor: 'rgba(75, 192, 192, 1)'
                         },
                         {
-                            label: `${subInvestment.label} 가격 변동 (원,$)`,
+                            label: `가격 변동 (원,$)`,
                             data: priceVariationValues,
                             type: 'bar',
                             yAxisID: 'y1',
@@ -294,13 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             type: 'linear',
                             display: true,
                             position: 'left',
-                            title: {
-                                display: true,
-                                text: '총 투자 금액 (원)',
-                                font: {
-                                    size: 14
-                                }
-                            },
                             ticks: {
                                 callback: function(value) {
                                     return formatCurrency(value);
@@ -316,13 +309,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             position: 'right',
                             grid: {
                                 drawOnChartArea: false, // 보조 축의 그리드선 숨기기
-                            },
-                            title: {
-                                display: true,
-                                text: '가격 변동 (원,$)',
-                                font: {
-                                    size: 14
-                                }
                             },
                             ticks: {
                                 callback: function(value) {
@@ -366,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: '총 투자 금액과 세부 종목 가격 변동',
+                            text: '${subInvestment.label} 증가 금액/세부 종목 가격',
                             font: {
                                 size: 16
                             }
