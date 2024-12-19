@@ -2,12 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('investment-form');
     const resultDiv = document.getElementById('result');
     const animationDiv = document.getElementById('animation');
-    const totalChartContainer = document.getElementById('total-chart-container');
-    const priceVariationChartContainer = document.getElementById('price-variation-chart-container');
-    const totalCtx = document.getElementById('total-investment-chart').getContext('2d');
-    const priceVariationCtx = document.getElementById('price-variation-chart').getContext('2d');
-    let totalInvestmentChart; // 총 투자 금액 그래프 인스턴스
-    let priceVariationChart; // 세부 항목별 가격 변동 그래프 인스턴스
+    const chartsDiv = document.getElementById('charts');
+    const combinedCtx = document.getElementById('combined-chart').getContext('2d');
+    let combinedChart; // 결합된 그래프 인스턴스
     let investmentsData = []; // JSON에서 불러온 투자 항목 데이터
 
     // 투자 항목 <select>를 초기화하는 함수
@@ -185,50 +182,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const growth = ((currentPrice - initialPrice) / initialPrice) * 100;
-            const currentValue = ((currentPrice / initialPrice) * amount);
+            const currentValue = (currentPrice / initialPrice) * amount;
 
             // 결과 표시
             resultDiv.style.display = 'block';
             resultDiv.innerHTML = `
                 <h2>투자 결과</h2>
-                <p>${year}년에 ${formatCurrency(amount)}를 투자하셨다면, ${currentPrice === investmentData['2024'] ? '2024년' : `${Math.max(...Object.keys(investmentData).map(y => parseInt(y)))}년`} 현재 약 <strong>${formatCurrency(currentValue)}</strong>이 되었습니다.</p>
+                <p>${year}년에 ${formatCurrency(amount)}를 투자하셨다면, ${currentPrice === investmentData['2024'] ? '2024년' : `${Math.max(...Object.keys(investmentData).map(y => parseInt(y)))}년`} 약 <strong>${formatCurrency(currentValue)}</strong>이 되었습니다.</p>
                 <p>변동률: <strong>${growth.toFixed(2)}%</strong></p>
             `;
-
-            // 투자 항목 상세 정보 표시
-            const investmentDetailsDiv = document.getElementById('investment-details');
-            console.log('investmentDetailsDiv:', investmentDetailsDiv); // 디버깅 로그
-
-            if (investmentDetailsDiv) {
-                investmentDetailsDiv.innerHTML = `
-                    <h3>${subInvestment.label}</h3>
-                    <img src="${subInvestment.logo || 'default-logo.png'}" alt="${subInvestment.label}" style="width: 50px; height: 50px;">
-                    <p>${subInvestment.description || '세부 항목에 대한 설명이 없습니다.'}</p>
-                `;
-            } else {
-                console.error('investment-details 요소를 찾을 수 없습니다.');
-            }
 
             // 애니메이션 제어
             animationDiv.innerHTML = '';
             if (growth > 0) {
                 // 가격 상승 시 애니메이션 추가
-                for (let i = 0; i < 5; i++) { // 원하는 반복 횟수로 조정
+                for (let i = 0; i < 1; i++) { // 원하는 반복 횟수로 조정
                     const img = document.createElement('img');
                     img.src = './images/happy.jpeg'; // 상승 시 사용할 이미지
                     img.alt = '상승';
-                    img.classList.add('bounce');
-                    img.style.width = '100px';
+                    img.classList.add('bounce'); // 애니메이션 클래스 추가
+                    img.style.width = '150px';
                     animationDiv.appendChild(img);
                 }
             } else if (growth < 0) {
                 // 가격 하락 시 애니메이션 추가
-                for (let i = 0; i < 5; i++) { // 원하는 반복 횟수로 조정
+                for (let i = 0; i < 1; i++) { // 원하는 반복 횟수로 조정
                     const img = document.createElement('img');
                     img.src = './images/sad.jpg'; // 하락 시 사용할 이미지
                     img.alt = '하락';
-                    img.classList.add('shake');
-                    img.style.width = '100px';
+                    img.classList.add('shake'); // 애니메이션 클래스 추가
+                    img.style.width = '150px';
                     animationDiv.appendChild(img);
                 }
             } else {
@@ -263,47 +246,98 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // 총 투자 금액 그래프 표시
-            totalChartContainer.style.display = 'block';
-            if (totalInvestmentChart) {
-                totalInvestmentChart.destroy(); // 기존 그래프가 있으면 제거
+            // 결합된 그래프 표시
+            chartsDiv.style.display = 'flex';
+            if (combinedChart) {
+                combinedChart.destroy(); // 기존 차트가 있으면 제거
             }
 
-            totalInvestmentChart = new Chart(totalCtx, {
-                type: 'line',
+            combinedChart = new Chart(combinedCtx, {
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: `${subInvestment.label} 총 투자 금액 (원)`,
-                        data: investmentValues,
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.1,
-                        pointRadius: 3,
-                        pointBackgroundColor: 'rgba(75, 192, 192, 1)'
-                    }]
+                    datasets: [
+                        {
+                            label: `${subInvestment.label} 총 금액 (원)`,
+                            data: investmentValues,
+                            type: 'line',
+                            yAxisID: 'y',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.1,
+                            pointRadius: 3,
+                            pointBackgroundColor: 'rgba(75, 192, 192, 1)'
+                        },
+                        {
+                            label: `${subInvestment.label} 가격 변동 (원,$)`,
+                            data: priceVariationValues,
+                            type: 'bar',
+                            yAxisID: 'y1',
+                            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false, // 그래프의 높이를 CSS로 제어
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    stacked: false,
                     scales: {
                         y: {
-                            beginAtZero: false,
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
                             title: {
                                 display: true,
-                                text: '총 투자 금액 (원)'
+                                text: '총 투자 금액 (원)',
+                                font: {
+                                    size: 14
+                                }
                             },
                             ticks: {
                                 callback: function(value) {
                                     return formatCurrency(value);
+                                },
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            grid: {
+                                drawOnChartArea: false, // 보조 축의 그리드선 숨기기
+                            },
+                            title: {
+                                display: true,
+                                text: '가격 변동 (원,$)',
+                                font: {
+                                    size: 14
+                                }
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return formatCurrency(value);
+                                },
+                                font: {
+                                    size: 12
                                 }
                             }
                         },
                         x: {
-                            title: {
-                                display: true,
-                                text: '연도'
+                            
+                            ticks: {
+                                font: {
+                                    size: 12
+                                }
                             }
                         }
                     },
@@ -313,77 +347,28 @@ document.addEventListener('DOMContentLoaded', () => {
                                 label: function(context) {
                                     return ` ${formatCurrency(context.parsed.y)}`;
                                 }
-                            }
-                        },
-                        legend: {
-                            position: 'top',
-                        },
-                        title: {
-                            display: true,
-                            text: '총 투자 금액 변화'
-                        }
-                    }
-                }
-            });
-
-            // 세부 항목별 가격 변동 그래프 표시
-            priceVariationChartContainer.style.display = 'block';
-            if (priceVariationChart) {
-                priceVariationChart.destroy(); // 기존 그래프가 있으면 제거
-            }
-
-            priceVariationChart = new Chart(priceVariationCtx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: `${subInvestment.label} 가격 변동 (원,$)`,
-                        data: priceVariationValues,
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.1,
-                        pointRadius: 3,
-                        pointBackgroundColor: 'rgba(255, 99, 132, 1)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            title: {
-                                display: true,
-                                text: '가격 변동 (원,$)'
                             },
-                            ticks: {
-                                callback: function(value) {
-                                    return formatCurrency(value);
-                                }
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: '연도'
-                            }
-                        }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return ` ${formatCurrency(context.parsed.y)}`;
-                                }
+                            titleFont: {
+                                size: 14
+                            },
+                            bodyFont: {
+                                size: 12
                             }
                         },
                         legend: {
+                            labels: {
+                                font: {
+                                    size: 14
+                                }
+                            },
                             position: 'top',
                         },
                         title: {
                             display: true,
-                            text: '세부 항목별 가격 변동'
+                            text: '총 투자 금액과 세부 종목 가격 변동',
+                            font: {
+                                size: 16
+                            }
                         }
                     }
                 }
