@@ -10,7 +10,7 @@ body {
 
 h1 {
     color: #333333;
-    font-size: 2rem; /* Bootstrap의 기본 폰트 크기와 조정 */
+    font-size: 1.5rem; /* Bootstrap의 기본 폰트 크기와 조정 */
 }
 
 #result h2 {
