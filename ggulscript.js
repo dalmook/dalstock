@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resultDiv.style.display = 'block';
             resultDiv.innerHTML = `
                 <h2>투자 결과</h2>
-                <p>${year}년에 ${formatNumber(amount)}를 투자하셨다면, ${currentPrice === investmentData['2024'] ? '2024년' : `${Math.max(...Object.keys(investmentData).map(y => parseInt(y)))}년`} 현재 약 <strong>${formatNumber(currentValue)}</strong>원이 되었습니다.</p>
+                <p>${year}년에 ${formatCurrency(amount)}를 투자하셨다면, ${currentPrice === investmentData['2024'] ? '2024년' : `${Math.max(...Object.keys(investmentData).map(y => parseInt(y)))}년`} 현재 약 <strong>${formatCurrency(currentValue)}</strong>이 되었습니다.</p>
                 <p>변동률: <strong>${growth.toFixed(2)}%</strong></p>
             `;
 
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: `${subInvestment.label} 가격 변동 (원,$)`,
+                        label: `${subInvestment.label} 가격 변동 (원)`,
                         data: priceVariationValues,
                         borderColor: 'rgba(255, 99, 132, 1)',
                         backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -355,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             beginAtZero: false,
                             title: {
                                 display: true,
-                                text: '가격 변동 (원,$)'
+                                text: '가격 변동 (원)'
                             },
                             ticks: {
                                 callback: function(value) {
@@ -397,17 +397,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 숫자를 단위에 따라 포맷팅하는 함수
     function formatCurrency(num) {
-        if (num >= 1000000000000) { // 1조 이상
-            return `${Math.round(num / 1000000000000)* 100) / 100}조 원`;
-        } else if (num >= 100000000) { // 1억 이상
-            return `${Math.round(num / 100000000)* 100) / 100}억 원`;
-        } else if (num >= 10000) { // 1만 이상
-            return `${Math.floor(num / 10000)}만 원`;
-        } else {
-            return `${num}`;
+        const ONE_TRILLION = 1000000000000; // 1조
+        const ONE_HUNDRED_MILLION = 100000000; // 1억
+        const ONE_TEN_THOUSAND = 10000; // 1만원
+
+        let result = '';
+
+        if (num >= ONE_TRILLION) { // 1조 이상
+            const cho = Math.floor(num / ONE_TRILLION);
+            result += `${cho}조`;
+            num %= ONE_TRILLION;
         }
-    }
-    function formatNumber(num) {
-        return Math.round(Number(num)).toLocaleString('ko-KR');
+
+        if (num >= ONE_HUNDRED_MILLION) { // 1억 이상
+            const eok = Math.floor(num / ONE_HUNDRED_MILLION);
+            result += `${eok}억`;
+            num %= ONE_HUNDRED_MILLION;
+        }
+
+        if (num >= ONE_TEN_THOUSAND) { // 1만원 이상
+            const man = Math.floor(num / ONE_TEN_THOUSAND);
+            result += `${man}만원`;
+            num %= ONE_TEN_THOUSAND;
+        }
+
+        if (result === '') { // 원 단위
+            result = `${num.toLocaleString('ko-KR')}원`;
+        }
+
+        return result;
     }
 });
