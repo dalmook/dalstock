@@ -398,9 +398,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // 숫자를 단위에 따라 포맷팅하는 함수
     function formatCurrency(num) {
         if (num >= 1000000000000) { // 1조 이상
-            return `${Math.round(num / 1000000000000),2}조 원`;
+            return `${Math.round(num / 1000000000000)* 100) / 100}조 원`;
         } else if (num >= 100000000) { // 1억 이상
-            return `${Math.round(num / 100000000),2}억 원`;
+            return `${Math.round(num / 100000000)* 100) / 100}억 원`;
         } else if (num >= 10000) { // 1만 이상
             return `${Math.floor(num / 10000)}만 원`;
         } else {
