@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resultDiv.style.display = 'block';
             resultDiv.innerHTML = `
                 <h2>투자 결과</h2>
-                <p>${year}년에 ${formatCurrency(amount)}를 투자하셨다면, ${currentPrice === investmentData['2024'] ? '2024년' : `${Math.max(...Object.keys(investmentData).map(y => parseInt(y)))}년`} 약 <strong>${formatCurrency(currentValue)}</strong>이 되었습니다.</p>
+                <p>${year}년에 ${formatCurrency(amount)}를 투자하셨다면, <br /> ${currentPrice === investmentData['2024'] ? '2024년' : `${Math.max(...Object.keys(investmentData).map(y => parseInt(y)))}년`} 약 <strong>${formatCurrency(currentValue)}</strong>이 되었습니다.</p>
                 <p>변동률: <strong>${growth.toFixed(2)}%</strong></p>
             `;
 
