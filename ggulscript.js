@@ -352,7 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         },
                         title: {
                             display: true,
-                            text: '${subInvestment.label} 증가 금액/세부 종목 가격',
+                            text: '총 금액/세부 종목 가격',
                             font: {
                                 size: 16
                             }
